@@ -13,6 +13,12 @@ sudo apt install mongodb-org
 sudo systemctl start mongod.service
 ```
 
+Install Redis Server:
+```
+sudo apt update
+sudo apt install redis-server
+```
+
 Install Pandanite Node:
 ```
 sudo apt-get update
