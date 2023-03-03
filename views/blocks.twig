@@ -1,0 +1,305 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+
+
+<div class="sc-qYsuA bKtdyT">
+  <div class="sc-pCPXO cJZrlO">
+    <div class="sc-fzqMdD fRMNNm">
+      <div class="sc-fzowVh fwdcsh">
+        <h1 class="sc-fzoJus edWbko">Blocks</h1>
+        
+		<div class="sc-ptDSg bvjSz" style="max-width: 50%; margin-left: auto; margin-right: 0px; max-height: 40px; align-self: center;">
+			<input id="searchval" class="sc-qXRQq jonqnN" placeholder=" Search ...   blockheight, blockhash, transaction id, address" /><button id="dosearch" class="sc-pAncQ gPjSHN">Search</button>
+		</div>
+
+      </div>
+
+      <div class="sc-fzokvW iuWQNm">
+        <div class="sc-fzqzlV eoCMvb">
+        
+          <div id="datatable"></div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+{% block javascripts %}
+<script>
+
+$(document).ready(function() {
+
+	$('#dosearch').on('click', function() {
+	
+		let searchVal = $('#searchval').val();
+
+		$('#dosearch').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+		socket.emit('doSearch', searchVal, function(data) {
+		
+			location.href = data.redirect;
+		
+		});
+	
+	});
+
+	$('#searchval').on('keypress', function (e) {
+   
+		if(e.which === 13){
+         	
+			let searchVal = $('#searchval').val();
+
+			$('#dosearch').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+			socket.emit('doSearch', searchVal, function(data) {
+					
+				location.href = data.redirect;
+		
+			});
+		
+		}
+	
+	});
+	
+	let queueReload = false;
+
+	const grid = new gridjs.Grid({
+	  columns: [
+		{ 
+		  name: "Block ID",
+		  attributes: {
+			style: {
+				width: '120px',
+				'text-align': "left"
+			}
+		  }
+		},
+		{ 
+		  name: "Age",
+		  attributes: {
+			style: {
+				width: '200px',
+				'text-align': "right",
+				overflow: 'hidden',
+			}
+		  }
+		},
+		{ 
+		  name: "#Txs",
+		  attributes: {
+			style: {
+				width: '100px',
+				'text-align': "right"
+			}
+		  }
+		},
+		{ 
+		  name: "Miner",
+		  attributes: {
+			style: {
+				'text-align': "right",
+				overflow: 'hidden',
+    			'text-overflow': 'ellipsis'
+			}
+		  }
+		},
+		{ 
+		  name: "Total Value PDN",
+		  attributes: {
+			style: {
+				width: '150px',
+				'text-align': "right"
+			}
+		  }
+		},
+		{ 
+		  name: "Total Fees PDN",
+		  attributes: {
+			style: {
+				width: '150px',
+				'text-align': "right"
+			}
+		  }
+		},
+		{ 
+		  name: "Block Reward",
+		  attributes: {
+			style: {
+				width: '140px',
+				'text-align': "right"
+			}
+		  }
+		}
+	  ],
+	  autoWidth: false,
+	  pagination: {
+		limit: 25,
+		server: {
+		  url: (prev, page, limit) => JSON.stringify({
+		  	offset: (page * limit),
+		  	limit: limit
+		  })
+		}
+	  },
+	  language: {
+		'pagination': {
+		  'previous': '<<',
+		  'next': '>>'
+		}
+	  },
+	  style: { 
+		table: { 
+		  'white-space': 'nowrap'
+		}
+	  },
+	  server: {
+		url: JSON.stringify({
+			offset: 0,
+			limit: 25
+		}),
+		data: (opts) => {
+			return new Promise((resolve, reject) => {
+
+				socket.emit("getBlocks", JSON.parse(opts.url), function(result) {
+
+					if (result)
+					{
+					
+						resolve({
+							data: result.results.map(block => [
+								gridjs.html(`<a style="color: #3498db; cursor: pointer;" href="/block/` + block.blockId + `">` + block.blockId + `</a>`),
+								gridjs.html(timeAgo(block.timestamp*1000)),
+								gridjs.html(`<a style="color: #3498db; cursor: pointer;" href="/txs?blockId=` + block.blockId + `">` + block.transactionCount + `</a>`),
+								gridjs.html(`<a style="color: #3498db; cursor: pointer;" href="/account/` + block.minedBy + `">` + block.minedBy + `</a>`),
+								gridjs.html(block.totalValue),
+								gridjs.html(block.totalFees),
+								gridjs.html(block.blockReward)
+							]),
+							total: result.total
+						});
+
+					}
+					else
+					{
+						resolve({
+							data: [],
+							total: 0
+						});
+					}
+					
+				});
+
+			});
+		}
+	  }
+	}).render(document.getElementById("datatable"));
+
+
+
+	setInterval(function() {
+	
+		if (queueReload == true) 
+		{
+		
+			queueReload = false;
+			
+			var currentpage = document.querySelector('.gridjs-currentPage').textContent;
+
+			if (currentpage == 1)
+				grid.forceRender();
+		
+		}
+	
+	},2000);
+
+  	socket.on('newBlock', function (blockData) { 
+
+		queueReload = true;
+
+  	});
+
+  	
+});    
+
+function timeAgo(timestamp) {
+  const seconds = Math.floor((new Date() - timestamp) / 1000);
+
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1
+  };
+
+  for (const [key, value] of Object.entries(intervals)) {
+    const interval = Math.floor(seconds / value);
+    if (interval >= 1) {
+      return `${interval} ${key}${interval > 1 ? 's' : ''}`;
+    }
+  }
+
+  return 'just now';
+}
+
+function prependListItem(listName, listItemHTML){
+    $(listItemHTML)
+        .hide()
+        .css('opacity',0.0)
+        .prependTo('#' + listName)
+        .slideDown('slow')
+        .animate({opacity: 1.0})
+}
+
+function sigfig(num, sigfigs_opt) {
+	// Set default sigfigs to 3
+	sigfigs_opt = (typeof sigfigs_opt === "undefined") ? 3 : sigfigs_opt;
+	// Only assigns sig figs and suffixes for numbers > 1
+	if (num <= 1) return num.toPrecision(sigfigs_opt);
+	// Calculate for numbers > 1
+	var power10 = log10(num);
+	var power10ceiling = Math.floor(power10) + 1;
+	// 0 = '', 1 = 'K', 2 = 'M', 3 = 'B', 4 = 'T'
+	var SUFFIXES = ['H/s', 'kH/s', 'MH/s', 'GH/s', 'TH/s', 'PH/s'];
+	// 100: power10 = 2, suffixNum = 0, suffix = ''
+	// 1000: power10 = 3, suffixNum = 1, suffix = 'K'
+	var suffixNum = Math.floor(power10 / 3);
+	var suffix = SUFFIXES[suffixNum];
+	// Would be 1 for '', 1000 for 'K', 1000000 for 'M', etc.
+	var suffixPower10 = Math.pow(10, suffixNum * 3);
+	var base = num / suffixPower10;
+	var baseRound = base.toPrecision(sigfigs_opt);
+	return baseRound + suffix;
+}
+
+function log10(num) {
+	  // Per http://stackoverflow.com/questions/3019278/how-can-i-specify-the-base-for-math-log-in-javascript#comment29970629_16868744
+	  // Handles floating-point errors log10(1000) otherwise fails at (2.99999996)
+	  return (Math.round(Math.log(num) / Math.LN10 * 1e6) / 1e6);
+}
+
+function addCommas(nStr){
+    nStr += '';
+    c = nStr.split(','); // Split the result on commas
+    nStr = c.join('');  // Make it back to a string without the commas
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
+</script>
+{% endblock %}
+
+

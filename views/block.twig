@@ -1,0 +1,242 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+
+
+<div class="sc-qYsuA bKtdyT">
+  <div class="sc-pCPXO cJZrlO">
+    <div class="sc-fzqMdD fRMNNm">
+      <div class="sc-fzowVh fwdcsh">
+        <h1 class="sc-fzoJus edWbko">Block # {{ blockInfo.blockId }}</h1>
+        
+		<div class="sc-ptDSg bvjSz" style="max-width: 50%; margin-left: auto; margin-right: 0px; max-height: 40px; align-self: center;">
+			<input id="searchval" class="sc-qXRQq jonqnN" placeholder=" Search ...   blockheight, blockhash, transaction id, address" /><button id="dosearch" class="sc-pAncQ gPjSHN">Search</button>
+		</div>
+		
+      </div>
+
+      <div class="sc-fzokvW iuWQNm">
+        <div class="sc-fzqzlV eoCMvb">
+        
+          <div style="width: 100%; background-color: #fff; border-radius: 10px;">
+          
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Block Height:</div>
+				<div style="flex:3; padding:15px;">
+					{% if (blockInfo.blockId == 1) %}
+					<span style="color: #555;"><i class="fa fa-chevron-left"></i></span>
+					{% else %}
+					<a style="color: #3498db; cursor: pointer;" href="/block/{{ blockInfo.blockId - 1 }}"><i class="fa fa-chevron-left"></i></a>
+					{% endif %}
+					&nbsp;<span style="font-weight: bold;">{{ blockInfo.blockId }}</span>&nbsp;
+					{% if (blockInfo.isTip == true) %}
+					<span style="color: #555;"><i class="fa fa-chevron-right"></i></span>
+					{% else %}
+					<a style="color: #3498db; cursor: pointer;" href="/block/{{ blockInfo.blockId + 1 }}"><i class="fa fa-chevron-right"></i></a>
+					{% endif %}
+				</div>
+			</div>
+
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Block Hash:</div>
+				<div style="flex:3; padding:15px;">{{ blockInfo.blockHash }} <i data-clipboard-text="{{ blockInfo.blockHash }}" class="fa-solid fa-copy tooltip" title="Copied" style="color: #3498db; cursor: pointer;"></i></div>
+			</div>
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Timestamp:</div>
+				<div style="flex:3; padding:15px;" id='timestamp'>{{ blockInfo.timestamp }}</div>
+			</div>
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Transactions:</div>
+				<div style="flex:3; padding:15px;"><a href="/txs?blockId={{ blockInfo.blockId }}" style="color: #3498db; cursor: pointer;">{{ blockInfo.transactionCount }} transaction{% if (blockInfo.transactionCount>1) %}s{% endif %}</a></div>
+			</div>
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Mined By:</div>
+				<div style="flex:3; padding:15px;"><a href="/account/{{ blockInfo.minedBy.address }}" style="color: #3498db; cursor: pointer;">{{ blockInfo.minedBy.address }}</a> <i data-clipboard-text="{{ blockInfo.minedBy.address }}" class="fa-solid fa-copy tooltip" title="Copied" style="color: #3498db; cursor: pointer;"></i></div>
+			</div>
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Block Reward:</div>
+				<div style="flex:3; padding:15px;">{{ blockInfo.blockRewardFormatted }} PDN {% if (blockInfo.totalFees>0) %} (+{{ blockInfo.totalFeesFormatted }} PDN Fees) {% endif %}</div>
+			</div>
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Difficulty:</div>
+				<div style="flex:3; padding:15px;">{{ blockInfo.difficulty }}</div>
+			</div>
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Total Value:</div>
+				<div style="flex:3; padding:15px;">{{ blockInfo.totalValueFormatted }} PDN</div>
+			</div>
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Total Fees:</div>
+				<div style="flex:3; padding:15px;">{{ blockInfo.totalFeesFormatted }} PDN</div>
+			</div>
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Merkle Root:</div>
+				<div style="flex:3; padding:15px;">{{ blockInfo.merkleRoot }} <i data-clipboard-text="{{ blockInfo.merkleRoot }}" class="fa-solid fa-copy tooltip" title="Copied" style="color: #3498db; cursor: pointer;"></i></div>
+			</div>
+
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Nonce:</div>
+				<div style="flex:3; padding:15px;">{{ blockInfo.nonce }} <i data-clipboard-text="{{ blockInfo.nonce }}" class="fa-solid fa-copy tooltip" title="Copied" style="color: #3498db; cursor: pointer;"></i></div>
+			</div>
+			
+          	<div style="border-bottom: 0.5px solid #e7eaf3; display:flex; flex-direction:row;">
+				<div style="flex:1; padding:15px;">Last Block Hash:</div>
+				<div style="flex:3; padding:15px;"><a href="/block/{{ blockInfo.lastBlockHash }}" style="color: #3498db; cursor: pointer;">{{ blockInfo.lastBlockHash }}</a> <i data-clipboard-text="{{ blockInfo.lastBlockHash }}" class="fa-solid fa-copy tooltip" title="Copied" style="color: #3498db; cursor: pointer;"></i></div>
+			</div>
+
+          </div>
+          
+          
+          
+          
+          
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+{% block javascripts %}
+<script>
+
+$(document).ready(function() {
+
+	$('#dosearch').on('click', function() {
+	
+		let searchVal = $('#searchval').val();
+
+		$('#dosearch').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+		socket.emit('doSearch', searchVal, function(data) {
+		
+			location.href = data.redirect;
+		
+		});
+	
+	});
+
+	$('#searchval').on('keypress', function (e) {
+   
+		if(e.which === 13){
+         	
+			let searchVal = $('#searchval').val();
+
+			$('#dosearch').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+			socket.emit('doSearch', searchVal, function(data) {
+					
+				location.href = data.redirect;
+		
+			});
+		
+		}
+	
+	});
+	
+	var clipboard = new ClipboardJS('.fa-copy');
+
+	$('.fa-copy').tooltipster({
+	   animation: 'fade',
+	   delay: 200,
+	   trigger: 'custom',
+	   triggerOpen: {
+			click: true
+	   },
+	   triggerClose: {
+			mouseleave: true
+	   }
+	});
+	
+	clipboard.on('success', function(e) {
+		
+
+
+	});
+
+	let timestamp = parseInt($('#timestamp').html()) * 1000;
+
+	$('#timestamp').html(timeAgo(timestamp) + ' (' + new Date(timestamp).toUTCString() + ')')
+  	
+});    
+
+function timeAgo(timestamp) {
+  const seconds = Math.floor((new Date() - timestamp) / 1000);
+
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1
+  };
+
+  for (const [key, value] of Object.entries(intervals)) {
+    const interval = Math.floor(seconds / value);
+    if (interval >= 1) {
+      return `${interval} ${key}${interval > 1 ? 's' : ''} ago`;
+    }
+  }
+
+  return 'just now';
+}
+
+function sigfig(num, sigfigs_opt) {
+	// Set default sigfigs to 3
+	sigfigs_opt = (typeof sigfigs_opt === "undefined") ? 3 : sigfigs_opt;
+	// Only assigns sig figs and suffixes for numbers > 1
+	if (num <= 1) return num.toPrecision(sigfigs_opt);
+	// Calculate for numbers > 1
+	var power10 = log10(num);
+	var power10ceiling = Math.floor(power10) + 1;
+	// 0 = '', 1 = 'K', 2 = 'M', 3 = 'B', 4 = 'T'
+	var SUFFIXES = ['H/s', 'kH/s', 'MH/s', 'GH/s', 'TH/s', 'PH/s'];
+	// 100: power10 = 2, suffixNum = 0, suffix = ''
+	// 1000: power10 = 3, suffixNum = 1, suffix = 'K'
+	var suffixNum = Math.floor(power10 / 3);
+	var suffix = SUFFIXES[suffixNum];
+	// Would be 1 for '', 1000 for 'K', 1000000 for 'M', etc.
+	var suffixPower10 = Math.pow(10, suffixNum * 3);
+	var base = num / suffixPower10;
+	var baseRound = base.toPrecision(sigfigs_opt);
+	return baseRound + suffix;
+}
+
+function log10(num) {
+	  // Per http://stackoverflow.com/questions/3019278/how-can-i-specify-the-base-for-math-log-in-javascript#comment29970629_16868744
+	  // Handles floating-point errors log10(1000) otherwise fails at (2.99999996)
+	  return (Math.round(Math.log(num) / Math.LN10 * 1e6) / 1e6);
+}
+
+function addCommas(nStr){
+    nStr += '';
+    c = nStr.split(','); // Split the result on commas
+    nStr = c.join('');  // Make it back to a string without the commas
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
+</script>
+{% endblock %}
+
+

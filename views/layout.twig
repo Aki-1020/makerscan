@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#000000" />
+		<meta name="description" content="Pandanite (PDN) Blockchain Explorer" />
+		<link rel="manifest" href="/manifest.json" />
+
+		<title>Pandanite (PDN) Blockchain Explorer</title>
+
+		<link rel="stylesheet" href="/stylesheets/chartist.min.css">
+		
+		<script src="/javascripts/chartist.min.js"></script>
+
+		<link rel="stylesheet" href="/stylesheets/chartist-plugin-tooltip.css">
+
+		<link rel="stylesheet" href="/stylesheets/tooltipster.bundle.min.css">
+
+		<link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+		<link rel="stylesheet" href="/stylesheets/main.css" />
+		
+	</head>
+	<body>
+		<div id="root" style="min-height: 100%; position:absolute; width:100%;">
+			<div class="sc-AxjAm bzbjzZ">
+				<div class="sc-AxirZ krtsgc">
+					<div class="sc-AxiKw bOTXee" style="padding-top: 3px;">
+						<a href="/" class="sc-AxheI gCChFq">
+							<img src="/images/pdnlogoicon.webp" class="sc-AxhCb XjdiQ" /> PANDASCAN
+						</a>
+					</div>
+					<div class="sc-AxhUy bPBxXj">
+						<div class="sc-AxgMl leWPMq"><a href="/blocks" class="sc-AxheI gCChFq">Blocks</a></div>
+						<div class="sc-AxgMl leWPMq"><a href="/txs" class="sc-AxheI gCChFq">Transactions</a></div>
+						<div class="sc-AxgMl leWPMq"><a href="/richlist" class="sc-AxheI gCChFq">Rich List</a></div>
+						<div class="sc-AxgMl leWPMq"><a href="/peers" class="sc-AxheI gCChFq">Peers</a></div>
+						<!--div class="sc-AxgMl leWPMq"><span class="sc-AxheI gCChFq">Wallet</span></div-->
+					</div>
+				</div>
+			</div>
+			
+			{% block body %}{% endblock %}
+
+			<div class="sc-Axmtr bIqxoK">
+				<div class="sc-AxmLO juhQJX">
+					<div class="sc-fzozJi ga-DFuP">
+						<div class="sc-fzpans cOvRme"><img src="/images/pdnlogoicon.webp" class="sc-fzoLsD cOIACS" />Powered by Pandanite</div>
+						<div class="sc-fzplWN wgAjp">
+							Pandascan is a Block Explorer and Analytics Platform<br />
+							for Pandanite, a fast layer 1 protocol built with only 6000 lines of code.
+						</div>
+					</div>
+					<hr class="sc-fznKkj hLcedR" />
+					<div class="sc-fznZeY gRLfCv" style="color:#fff;">Made with &nbsp;<i class="fa-solid fa-heart" style="color: red;"></i>&nbsp; by&nbsp;<a style="color: #fff;" href="https://xeggex.com">XeggeX</a><div class="sc-fzokOt fKudky">Pandascan © 2023</div></div>
+				</div>
+			</div>
+		</div>
+
+  		<script src="/javascripts/jquery.min.js"></script>
+  		<script src="/javascripts/socket.io.min.js"></script>
+  		<script src="/javascripts/clipboard.min.js"></script>
+  		<script src="/javascripts/chartist-plugin-tooltip.js"></script>
+
+  		<script src="/javascripts/tooltipster.bundle.min.js"></script>
+
+		<script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+
+
+  		<script>
+  		
+  			var socket;
+  			
+  			$(document).ready(function() {
+  			
+  				socket = io({'transports': ['websocket'], allowUpgrades: false}); 
+  		
+  			});
+  			
+  		</script>
+
+  
+		{% block javascripts %}{% endblock %}
+		
+	</body>
+</html>
+

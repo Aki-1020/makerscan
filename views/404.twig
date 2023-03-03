@@ -1,0 +1,78 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+<div id="404">
+  <div style="max-width: 650px; margin:auto; padding-top:10px; text-align:center;">
+  
+  	<h1 style="font-size:60px; font-weight:bold;">404 - Not found</h1>
+  
+    <img src="/images/404.png">
+    
+    <h1>We could not find what you were looking for</h1>
+    
+    <br /><br />
+    <div>
+    
+      <p>If you were doing a search, then try a new search...</p>
+      
+      <br /><br />
+      
+	<div class="sc-ptDSg bvjSz" style="max-height: 40px; align-self: center;">
+		<input id="searchval" class="sc-qXRQq jonqnN" placeholder=" Search ...   blockheight, blockhash, transaction id, address" /><button id="dosearch" class="sc-pAncQ gPjSHN">Search</button>
+	</div>
+      
+      <br /><br />
+      <br /><br />
+      
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script>
+
+$(document).ready(function() {
+
+	$('#dosearch').on('click', function() {
+	
+		let searchVal = $('#searchval').val();
+
+		$('#dosearch').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+		socket.emit('doSearch', searchVal, function(data) {
+
+			$('#dosearch').html('Search');
+		
+			location.href = data.redirect;
+		
+		});
+	
+	});
+
+	$('#searchval').on('keypress', function (e) {
+   
+		if(e.which === 13){
+         	
+			let searchVal = $('#searchval').val();
+
+			$('#dosearch').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+			socket.emit('doSearch', searchVal, function(data) {
+
+				$('#dosearch').html('Search');
+					
+				location.href = data.redirect;
+		
+			});
+		
+		}
+	
+	});
+	
+	
+});
+
+</script>
+{% endblock %}
