@@ -8,8 +8,8 @@
 					<div class="sc-pQSRh kCChlW">
 						<div class="sc-pZnSc cvQJgk">
 							<div class="sc-oUoif jsVciS">
-								<h2 class="sc-pcJja jsQOlE">Pandanite Blockchain Explorer</h2>
-								<h3 class="sc-pliRl lfuYQh"><a href="https://pandanite-crypto.github.io/" style="color:#fff;">Pandanite Homepage</a></h3>
+								<h2 class="sc-pcJja jsQOlE">MakerCoin Blockchain Explorer</h2>
+								<h3 class="sc-pliRl lfuYQh"><a href="https://github.com/Aki-1020/makercoin" style="color:#fff;">MakerCoin Homepage</a></h3>
 							</div>
 							<div class="sc-ptDSg bvjSz">
 								<input id="searchval" class="sc-qXRQq jonqnN" placeholder=" Search ...   blockheight, blockhash, transaction id, address" /><button id="dosearch" class="sc-pAncQ gPjSHN">Search</button>
@@ -18,7 +18,7 @@
 					</div>
 					<div class="sc-qPLKk kbOuEh">
 						<div class="sc-qXHHN UUqnD">
-							<div class="sc-pAyMl kuwXmF">
+{# 							<div class="sc-pAyMl kuwXmF">
 								<div class="sc-pITNg dCzMlQ">
 									<img src="/images/pandablue2.png" class="sc-pkIrX hqGwVX" />
 									<div class="sc-pQsrT cXYqGV">
@@ -41,7 +41,8 @@
 									</div>
 								</div>
 							</div>
-							<div class="sc-pAyMl kuwXmF">
+ #}
+ 							<div class="sc-pAyMl kuwXmF">
 								<div class="sc-pITNg dCzMlQ">
 									<img src="/images/Block.svg" class="sc-pkIrX hqGwVX" />
 									<div class="sc-pQsrT cXYqGV">
@@ -134,15 +135,15 @@ $(document).ready(function() {
 	
 	socket.emit('getstats', function(data) {
 		
-		if (data.pdnpriceusd) $('#pdnpriceusd').html(data.pdnpriceusd);
-		if (data.pdnpricebtc) $('#pdnpricebtc').html(data.pdnpricebtc);
-		if (data.pdnpricechange) $('#pdnpricechange').html(data.pdnpricechange);
-		if (data.marketcap) $('#marketcap').html(addCommas(data.marketcap));
+		// if (data.pdnpriceusd) $('#pdnpriceusd').html(data.pdnpriceusd);
+		// if (data.pdnpricebtc) $('#pdnpricebtc').html(data.pdnpricebtc);
+		// if (data.pdnpricechange) $('#pdnpricechange').html(data.pdnpricechange);
+		// if (data.marketcap) $('#marketcap').html(addCommas(data.marketcap));
 		if (data.lastblock) $('#lastblock').html(data.lastblock);
 		if (data.lastblocktxs) $('#lastblocktxs').html(data.lastblocktxs);
 		if (data.difficulty) $('#difficulty').html(data.difficulty);
 		if (data.hashrate) $('#hashrate').html(sigfig(parseInt(data.hashrate), 3));
-		if (data.circulation) $('#circulation').html(addCommas(data.circulation));
+		// if (data.circulation) $('#circulation').html(addCommas(data.circulation));
 
 		var chart = new Chartist.Line('#transactionHistoryChart', {
 		  labels: data.txhistorychart1,
@@ -295,15 +296,15 @@ $(document).ready(function() {
 
   	socket.on('updateStats', function (data) { 
 
-		if (data.pdnpriceusd) $('#pdnpriceusd').html(data.pdnpriceusd);
-		if (data.pdnpricebtc) $('#pdnpricebtc').html(data.pdnpricebtc);
-		if (data.pdnpricechange) $('#pdnpricechange').html(data.pdnpricechange);
-		if (data.marketcap) $('#marketcap').html(addCommas(data.marketcap));
+		// if (data.pdnpriceusd) $('#pdnpriceusd').html(data.pdnpriceusd);
+		// if (data.pdnpricebtc) $('#pdnpricebtc').html(data.pdnpricebtc);
+		// if (data.pdnpricechange) $('#pdnpricechange').html(data.pdnpricechange);
+		// if (data.marketcap) $('#marketcap').html(addCommas(data.marketcap));
 		if (data.lastblock) $('#lastblock').html(data.lastblock);
 		if (data.lastblocktxs) $('#lastblocktxs').html(data.lastblocktxs);
 		if (data.difficulty) $('#difficulty').html(data.difficulty);
 		if (data.hashrate) $('#hashrate').html(sigfig(parseInt(data.hashrate), 3));
-		if (data.circulation) $('#circulation').html(addCommas(data.circulation));
+		// if (data.circulation) $('#circulation').html(addCommas(data.circulation));
 
 		new Chartist.Line('#transactionHistoryChart', {
 		  labels: data.txhistorychart1,
