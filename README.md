@@ -1,6 +1,6 @@
 
 
-# Pandascan - Block Explorer for Pandanite
+# MakerScan - Block Explorer for MakerCoin
 
 Ubuntu 20.04 Install Instructions
 
@@ -19,25 +19,9 @@ sudo apt update
 sudo apt install redis-server
 ```
 
-Install Pandanite Node:
-```
-sudo apt-get update
-sudo apt-get -y install make cmake automake libtool python3-pip libleveldb-dev curl git
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
-sudo pip3 install conan==1.59
-git clone https://github.com/pandanite-crypto/pandanite
-cd pandanite
-mkdir build
-cd build
-conan install .. --build=missing
-cd ..
-cmake .
-make server
-./bin/server
-```
-
 Install NodeJS:
 ```
+curl -fsSL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
